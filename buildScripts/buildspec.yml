@@ -1,0 +1,16 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo "build phase"
+      - ./gradlew :Application:build -x test
+  post_build:
+    commands:
+      - bash -c "if [ /"$CODEBUILD_BUILD_SUCCEEDING/" == /"0/" ]; then exit 1; fi"
+      - echo "post-build phase"
+      - aws cloudformation package --template-file Application/template.yml --s3-bucket $ARTIFACT_BUCKET --output-template-file out.yml
+
+artifacts:
+  files:
+    - '**/*'

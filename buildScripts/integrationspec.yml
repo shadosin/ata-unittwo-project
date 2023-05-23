@@ -1,0 +1,12 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo "build phase"
+      - ./gradlew :IntegrationTests:test
+reports:
+  integrationtests-reports:
+    files:
+      - 'IntegrationTests/build/test-results/test/*.xml'
+    file-format: "JUNITXML"

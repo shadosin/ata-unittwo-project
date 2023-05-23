@@ -1,0 +1,13 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo "build phase"
+      - ./gradlew :Application:build
+      - ./gradlew :Application:test
+reports:
+  junit-reports:
+    files:
+      - 'Application/build/test-results/test/*.xml'
+    file-format: "JUNITXML"

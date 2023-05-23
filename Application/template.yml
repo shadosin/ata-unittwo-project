@@ -1,0 +1,244 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Parameters:
+  ProjectName:
+    Type: String
+Resources:
+  ProjectStorage:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Join
+        - ''
+        - - !Ref ProjectName
+          - '-datastore'
+  createdepartment:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/distributions/Application.zip
+      Handler: com.kenzie.unit.two.iam.lambda.CreateDepartment
+      Runtime: java11
+      Description: create department
+      MemorySize: 512
+      Timeout: 60
+      # Function's execution role
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AWSLambda_ReadOnlyAccess
+        - AWSXrayWriteOnlyAccess
+        - AWSLambdaVPCAccessExecutionRole
+        - AmazonS3FullAccess
+      Tracing: Active
+      Environment:
+        Variables:
+          BucketName:
+            Ref: ProjectStorage
+  createuser:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/distributions/Application.zip
+      Handler: com.kenzie.unit.two.iam.lambda.CreateUser
+      Runtime: java11
+      Description: create user
+      MemorySize: 512
+      Timeout: 60
+      # Function's execution role
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AWSLambda_ReadOnlyAccess
+        - AWSXrayWriteOnlyAccess
+        - AWSLambdaVPCAccessExecutionRole
+        - AmazonS3FullAccess
+      Tracing: Active
+      Environment:
+        Variables:
+          BucketName:
+            Ref: ProjectStorage
+  createrole:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/distributions/Application.zip
+      Handler: com.kenzie.unit.two.iam.lambda.CreateRole
+      Runtime: java11
+      Description: create role
+      MemorySize: 512
+      Timeout: 60
+      # Function's execution role
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AWSLambda_ReadOnlyAccess
+        - AWSXrayWriteOnlyAccess
+        - AWSLambdaVPCAccessExecutionRole
+        - AmazonS3FullAccess
+      Tracing: Active
+      Environment:
+        Variables:
+          BucketName:
+            Ref: ProjectStorage
+  getdepartments:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/distributions/Application.zip
+      Handler: com.kenzie.unit.two.iam.lambda.GetDepartments
+      Runtime: java11
+      Description: get departments
+      MemorySize: 512
+      Timeout: 60
+      # Function's execution role
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AWSLambda_ReadOnlyAccess
+        - AWSXrayWriteOnlyAccess
+        - AWSLambdaVPCAccessExecutionRole
+        - AmazonS3FullAccess
+      Tracing: Active
+      Environment:
+        Variables:
+          BucketName:
+            Ref: ProjectStorage
+  getusers:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/distributions/Application.zip
+      Handler: com.kenzie.unit.two.iam.lambda.GetUsers
+      Runtime: java11
+      Description: get users
+      MemorySize: 512
+      Timeout: 60
+      # Function's execution role
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AWSLambda_ReadOnlyAccess
+        - AWSXrayWriteOnlyAccess
+        - AWSLambdaVPCAccessExecutionRole
+        - AmazonS3FullAccess
+      Tracing: Active
+      Environment:
+        Variables:
+          BucketName:
+            Ref: ProjectStorage
+  getroles:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/distributions/Application.zip
+      Handler: com.kenzie.unit.two.iam.lambda.GetRoles
+      Runtime: java11
+      Description: get roles
+      MemorySize: 512
+      Timeout: 60
+      # Function's execution role
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AWSLambda_ReadOnlyAccess
+        - AWSXrayWriteOnlyAccess
+        - AWSLambdaVPCAccessExecutionRole
+        - AmazonS3FullAccess
+      Tracing: Active
+      Environment:
+        Variables:
+          BucketName:
+            Ref: ProjectStorage
+  assignusertorole:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/distributions/Application.zip
+      Handler: com.kenzie.unit.two.iam.lambda.AssignUserToRole
+      Runtime: java11
+      Description: create user role
+      MemorySize: 512
+      Timeout: 60
+      # Function's execution role
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AWSLambda_ReadOnlyAccess
+        - AWSXrayWriteOnlyAccess
+        - AWSLambdaVPCAccessExecutionRole
+        - AmazonS3FullAccess
+      Tracing: Active
+      Environment:
+        Variables:
+          BucketName:
+            Ref: ProjectStorage
+  getuserroles:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/distributions/Application.zip
+      Handler: com.kenzie.unit.two.iam.lambda.GetUserRoles
+      Runtime: java11
+      Description: get user roles
+      MemorySize: 512
+      Timeout: 60
+      # Function's execution role
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AWSLambda_ReadOnlyAccess
+        - AWSXrayWriteOnlyAccess
+        - AWSLambdaVPCAccessExecutionRole
+        - AmazonS3FullAccess
+      Tracing: Active
+      Environment:
+        Variables:
+          BucketName:
+            Ref: ProjectStorage
+  canwarehouseuserpackitem:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/distributions/Application.zip
+      Handler: com.kenzie.unit.two.warehouse.lambda.CanUserPackItem
+      Runtime: java11
+      Description: can warehouse user pack item
+      MemorySize: 512
+      Timeout: 60
+      # Function's execution role
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AWSLambda_ReadOnlyAccess
+        - AWSXrayWriteOnlyAccess
+        - AWSLambdaVPCAccessExecutionRole
+        - AmazonS3FullAccess
+      Tracing: Active
+      Environment:
+        Variables:
+          BucketName:
+            Ref: ProjectStorage
+  viewemployeepaycheck:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/distributions/Application.zip
+      Handler: com.kenzie.unit.two.employee.lambda.ViewEmployeePayCheck
+      Runtime: java11
+      Description: can user view employee paycheck
+      MemorySize: 512
+      Timeout: 60
+      # Function's execution role
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AWSLambda_ReadOnlyAccess
+        - AWSXrayWriteOnlyAccess
+        - AWSLambdaVPCAccessExecutionRole
+        - AmazonS3FullAccess
+      Tracing: Active
+      Environment:
+        Variables:
+          BucketName:
+            Ref: ProjectStorage
+  caninvoiceclient:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/distributions/Application.zip
+      Handler: com.kenzie.unit.two.warehouse.lambda.CanInvoiceClient
+      Runtime: java11
+      Description: can warehouse user pack item
+      MemorySize: 512
+      Timeout: 60
+      # Function's execution role
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AWSLambda_ReadOnlyAccess
+        - AWSXrayWriteOnlyAccess
+        - AWSLambdaVPCAccessExecutionRole
+        - AmazonS3FullAccess
+      Tracing: Active
+      Environment:
+        Variables:
+          BucketName:
+            Ref: ProjectStorage

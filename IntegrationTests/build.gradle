@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'com.amazonaws:aws-lambda-java-core:1.2.1'
+    testImplementation group: 'com.amazonaws', name: 'aws-java-sdk-lambda', version: '1.12.23'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testImplementation group: 'org.skyscreamer', name: 'jsonassert', version: '1.5.0'
+    testImplementation 'commons-lang:commons-lang:2.6'
+    testImplementation 'org.apache.commons:commons-lang3:3.+'
+    testImplementation 'com.google.guava:guava:20.+'
+    testImplementation 'commons-io:commons-io:2.5'
+    testImplementation 'org.reflections:reflections:0.10.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task buildZip(type: Zip) {
+    from compileJava
+    from processResources
+    into('lib') {
+        from configurations.runtimeClasspath
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+build.dependsOn buildZip
