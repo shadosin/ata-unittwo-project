@@ -1,0 +1,36 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Datasource local storage ignored files\
+/aws.xml
+/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+.idea
+
+# Ignore Gradle build output directory
+build
+
+.project
+.settings
+
+/Solution/src/main/.aws-sam/
+/Solution/.aws-sam
+/Application/src/main/.aws-sam/
+/Application/.aws-sam
+
+invoke/*.json
+
+/Application/src/main/java/com/kenzie/unit/two/project/iam/invoke/*.json
+/Application/src/main/java/com/kenzie/unit/two/project/employee/invoke/*.json
+/Application/src/main/java/com/kenzie/unit/two/project/warehouse/invoke/*.json
+
+.DS_Store
+Application/.DS_Store
+Application/src/.DS_Store
+*.json

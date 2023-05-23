@@ -1,0 +1,8 @@
+plugins {
+    id 'ata-curriculum.java-conventions'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
+}

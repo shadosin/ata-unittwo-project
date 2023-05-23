@@ -1,0 +1,16 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo "build phase"
+      - ./gradlew :Application:test
+reports:
+  junit-reports:
+    files:
+      - 'Application/build/test-results/test/*.xml'
+    file-format: "JUNITXML"
+  jacoco-report:
+    files:
+      - 'Application/build/reports/jacoco/test/jacocoTestReport.xml'
+    file-format: 'JACOCOXML'
