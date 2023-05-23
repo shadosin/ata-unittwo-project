@@ -1,0 +1,92 @@
+plugins {
+    id 'ata-curriculum.snippets-conventions'
+    id 'ata-curriculum.integration-test-conventions'
+}
+
+dependencies {
+    implementation 'com.amazonaws:aws-lambda-java-core:1.2.1'
+    implementation 'com.amazonaws:aws-lambda-java-events:3.11.0'
+    testImplementation group: 'com.amazonaws', name: 'aws-java-sdk-lambda', version: '1.12.23'
+    implementation 'com.amazonaws:aws-lambda-java-runtime-interface-client:2.0.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.15'
+    implementation group: 'com.opencsv', name: 'opencsv', version: '5.5'
+    runtimeOnly 'com.amazonaws:aws-lambda-java-log4j2:1.4.0'
+
+    implementation 'org.apache.logging.log4j:log4j-api:2.13.0'
+    implementation 'org.apache.logging.log4j:log4j-core:2.13.0'
+    runtimeOnly 'org.apache.logging.log4j:log4j-slf4j18-impl:2.13.0'
+
+    testImplementation 'commons-lang:commons-lang:2.6'
+    testImplementation 'org.apache.commons:commons-lang3:3.+'
+    testImplementation 'com.google.guava:guava:20.+'
+    testImplementation 'commons-io:commons-io:2.5'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
+    testImplementation 'org.reflections:reflections:0.10.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testImplementation 'org.mockito:mockito-inline:4.3.1'
+    testImplementation 'org.mockito:mockito-core:4.3.1'
+    testImplementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+
+    implementation group: 'org.reflections', name: 'reflections', version: '0.10.2'
+    testImplementation files('../gradle/lib/testinfrastructure-1.0.1.jar')
+    implementation project(':Application')
+}
+
+task buildZip(type: Zip) {
+    from compileJava
+    from processResources
+    into('lib') {
+        from configurations.runtimeClasspath
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+build.dependsOn buildZip
+
+def wflowToTestsMap = [
+        'iam-integration-task1': [
+                'com.kenzie.unit.two.CanPackItemTest',
+        ],
+        'iam-integration-task2': [
+                'com.kenzie.unit.two.EmployeeServiceTest',
+        ],
+        'iam-integration-task3': [
+                'com.kenzie.unit.two.EmployeeExtendsUser',
+                'com.kenzie.unit.two.CanViewEmployeeDataTest',
+        ],
+        'iam-integration-task4': [
+                'com.kenzie.unit.two.UserRoleServiceTest',
+        ],
+        'iam-integration-task5': [
+                'com.kenzie.unit.two.CanInvoiceClientTest',
+        ],
+        'iam-integration-task6': [
+                'com.kenzie.unit.two.UserRoleCustomTest',
+        ],
+        'iam-integration-task7': [
+                'com.kenzie.unit.two.DepartmentServiceTest',
+        ],
+        'iam-preparation-taskuml': [
+                'com.kenzie.unit.two.CheckPlantUMLTest',
+        ],
+]
+
+wflowToTestsMap.forEach { wflowName, testList ->
+    tasks.register(wflowName) {
+        dependsOn wflowtest
+        test {
+            reports.html.destination = file("$reports.html.destination/../${wflowName}")
+            reports.junitXml.destination = file("$reports.junitXml.destination/${wflowName}")
+            doFirst {
+                filter {
+                    testList.each { includeTestsMatching it }
+                }
+            }
+        }
+    }
+}

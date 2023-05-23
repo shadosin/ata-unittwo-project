@@ -1,0 +1,41 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo "build phase"
+      - ./buildScripts/runIntegrationTests.sh
+
+reports:
+  integration-task1-report:
+    files:
+      - 'IntegrationTests/build/test-results/test/iam-integration-task1/*.xml'
+    file-format: "JUNITXML"
+  integration-task2-report:
+    files:
+      - 'IntegrationTests/build/test-results/test/iam-integration-task2/*.xml'
+    file-format: "JUNITXML"
+  integration-task3-report:
+    files:
+      - 'IntegrationTests/build/test-results/test/iam-integration-task3/*.xml'
+    file-format: "JUNITXML"
+  integration-task4-report:
+    files:
+      - 'IntegrationTests/build/test-results/test/iam-integration-task4/*.xml'
+    file-format: "JUNITXML"
+  integration-task5-report:
+    files:
+      - 'IntegrationTests/build/test-results/test/iam-integration-task5/*.xml'
+    file-format: "JUNITXML"
+  integration-task6-report:
+    files:
+      - 'IntegrationTests/build/test-results/test/iam-integration-task6/*.xml'
+    file-format: "JUNITXML"
+  integration-task7-report:
+    files:
+      - 'IntegrationTests/build/test-results/test/iam-integration-task7/*.xml'
+    file-format: "JUNITXML"
+  integration-taskuml-report:
+    files:
+      - 'IntegrationTests/build/test-results/test/iam-preparation-taskuml/*.xml'
+    file-format: "JUNITXML"
