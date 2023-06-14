@@ -26,6 +26,7 @@ public class ViewEmployeePayCheck implements RequestHandler<ViewEmployeePayCheck
         logger.log("EVENT: " + gson.toJson(event));
 
         Employee employee = App.employeeService().getEmployeePayCheck(event);
+        logger.log("Employee: " + employee);
         return employee;
     }
 }

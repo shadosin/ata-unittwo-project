@@ -6,111 +6,116 @@ import com.kenzie.unit.two.iam.service.DepartmentService;
 import com.kenzie.unit.two.iam.storage.Storage;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+
 import java.lang.reflect.Field;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 
-import static org.mockito.Mockito.mockingDetails;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.openMocks;
 import static org.reflections.ReflectionUtils.getAllFields;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DepartmentServiceTest {
+    @Mock
+    private Storage storage;
+    @InjectMocks
+    private DepartmentService departmentService;
+
+    @BeforeEach
+    void beforeEach() {
+        System.out.println(":)");
+        openMocks(this);
+    }
 
     @AfterEach
     void afterEach() {
-        assert(false);
+        System.out.println(":)");
+        ;
     }
 
     @Test
     void createNewDepartment_TASK_7() {
-        //GIVEN
-        DepartmentService departmentService = App.departmentService();
-
-        //WHEN
+        // GIVEN
         String departmentName = RandomStringUtils.random(20);
         CreateDepartmentRequest createDepartmentRequest = new CreateDepartmentRequest();
         createDepartmentRequest.setDepartmentName(departmentName);
+        Department expectedDepartment = new Department(UUID.randomUUID(), departmentName);
 
-        //THEN
+        // WHEN
+        when(storage.getDepartment(departmentName)).thenReturn(expectedDepartment);
         Department department = departmentService.createDepartment(createDepartmentRequest);
-        assertTrue(department.getId() != null);
+
+        // THEN
+        assertNotNull(department.getId());
+        verify(storage, times(1)).getDepartmentByName(departmentName);
+        verify(storage, times(1)).storeDepartment(any(Department.class));
     }
 
     @Test
     void throwExceptionDepartmentNameAlreadyExists_TASK_7() {
         //GIVEN
-        DepartmentService departmentService = App.departmentService();
-
-        //WHEN
         String departmentName = RandomStringUtils.random(20);
-
         CreateDepartmentRequest createDepartmentRequest = new CreateDepartmentRequest();
         createDepartmentRequest.setDepartmentName(departmentName);
 
-        departmentService.createDepartment(createDepartmentRequest);
+        when(storage.getDepartmentByName(departmentName)).thenReturn(new Department(UUID.randomUUID(), departmentName));
 
-
-        //THEN
-        assertThrows(IllegalArgumentException.class,
-                () -> departmentService.createDepartment(createDepartmentRequest));
+        // THEN
+        assertThrows(IllegalArgumentException.class, () -> departmentService.createDepartment(createDepartmentRequest));
+        verify(storage, times(1)).getDepartmentByName(departmentName);
     }
 
     @Test
-    void getDepartmentByName_TASK_7(){
+    void getDepartmentByName_TASK_7() {
         //GIVEN
-        DepartmentService departmentService = App.departmentService();
-
-        //WHEN
         String departmentName = RandomStringUtils.random(20);
+        Department expectedDepartment = new Department(UUID.randomUUID(), departmentName);
+        when(storage.getDepartmentByName(departmentName)).thenReturn(expectedDepartment);
 
-        CreateDepartmentRequest createDepartmentRequest = new CreateDepartmentRequest();
-        createDepartmentRequest.setDepartmentName(departmentName);
+        // WHEN
+        Department department = departmentService.getDepartmentByName(departmentName);
 
-        Department department = departmentService.createDepartment(createDepartmentRequest);
-
-
-        //THEN
-        Department queriedDepartment = departmentService.getDepartmentByName(departmentName);
-        assertTrue(department.getId().equals(queriedDepartment.getId()));
+        // THEN
+        assertEquals(expectedDepartment, department);
+        verify(storage, times(1)).getDepartmentByName(departmentName);
     }
 
     @Test
-    void getAllDepartments(){
+    void getAllDepartments() {
         //GIVEN
-        DepartmentService departmentService = App.departmentService();
+        Department department = new Department(UUID.randomUUID(), "Department 1");
+        List<Department> expectedDepartments = new ArrayList<>();
+        expectedDepartments.add(department);
+        when(storage.getDepartments()).thenReturn(expectedDepartments);
 
-        //WHEN
-        String departmentName = RandomStringUtils.random(20);
-
-        CreateDepartmentRequest createDepartmentRequest = new CreateDepartmentRequest();
-        createDepartmentRequest.setDepartmentName(departmentName);
-
-        Department department = departmentService.createDepartment(createDepartmentRequest);
-
-        //THEN
+        // WHEN
         List<Department> departments = departmentService.getDepartments();
-        assertTrue(departments.contains(department));
+
+        // THEN
+        assertEquals(expectedDepartments, departments);
+        verify(storage, times(1)).getDepartments();
     }
 
     @Test
     void departmentServiceTest_usesMocks_TASK_7() throws NoSuchFieldException, IllegalAccessException {
-        DepartmentServiceTest departmentServiceTest = new DepartmentServiceTest();
-        Set<Field> sourceFieldList = getAllFields(departmentServiceTest.getClass());
+        Set<Field> sourceFieldList = getAllFields(DepartmentServiceTest.class);
+        String storageFieldName = "storage";
 
-        //check if storage variable is set in this class using reflection
-        if (findPropertyWithType(sourceFieldList, "storage", "Storage")) {
-            Field field = getClass().getDeclaredField("storage");
-            assertTrue(mockingDetails(field.get(this)).isMock(), "storage needs to be a Mock");
+        // WHEN
+        boolean hasStorageField = findPropertyWithType(sourceFieldList, storageFieldName, "Storage");
 
-        }
-        else{
-            assertTrue(false, "Storage type variable with name <storage> needs to be declared");
-        }
-
+        // THEN
+        assertTrue(hasStorageField, "Storage type variable with name <storage> needs to be declared");
+        assertTrue(mockingDetails(storage).isMock(), "storage needs to be a Mock");
     }
 
     //helper method loops through a fieldLIst to find property name

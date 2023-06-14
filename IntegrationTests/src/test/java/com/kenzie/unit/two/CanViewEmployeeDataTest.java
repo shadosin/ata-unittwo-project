@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CanViewEmployeeDataTest {
 
@@ -41,6 +42,7 @@ public class CanViewEmployeeDataTest {
                 "\"employeeUserName\": \"elenamoscow\"" +
                 "}");
         System.out.println(LambdaUtility.resultToString(invokeResult));
+
         String actualResponse = new String(invokeResult.getPayload().array(), StandardCharsets.UTF_8);
 
         String expectedResponse =
@@ -51,10 +53,9 @@ public class CanViewEmployeeDataTest {
                         "\"name\":\"Operations\"}," +
                         "\"payCheck\":\"4000\"" +
                         "}";
-
         System.out.println(actualResponse);
         System.out.println(expectedResponse);
 
-        assert(actualResponse.matches(expectedResponse));
+        assertTrue(actualResponse.matches(expectedResponse));
     }
 }

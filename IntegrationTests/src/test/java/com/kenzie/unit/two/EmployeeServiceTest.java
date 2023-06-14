@@ -1,9 +1,12 @@
 package com.kenzie.unit.two;
 
 import com.kenzie.unit.two.employee.lambda.models.ViewEmployeePayCheckRequest;
+import com.kenzie.unit.two.employee.service.EmployeeNotFoundException;
 import com.kenzie.unit.two.employee.service.EmployeeService;
+import com.kenzie.unit.two.employee.service.UnauthorizedException;
 import com.kenzie.unit.two.employee.service.UserOrRoleNotFoundException;
 import com.kenzie.unit.two.employee.service.models.Employee;
+import com.kenzie.unit.two.iam.entities.Roles;
 import com.kenzie.unit.two.iam.models.Department;
 import com.kenzie.unit.two.iam.models.Role;
 import com.kenzie.unit.two.iam.models.User;
@@ -18,6 +21,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -110,6 +115,11 @@ public class EmployeeServiceTest {
 
         assertEquals(employee.getUserName(), "margaretparis");
         assertEquals(employee.getDepartment(), department);
+
+
     }
+
+
+
 }
 

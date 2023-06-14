@@ -1,5 +1,6 @@
 package com.kenzie.unit.two.iam.service;
 
+import com.kenzie.unit.two.employee.service.UserOrRoleNotFoundException;
 import com.kenzie.unit.two.iam.lambda.models.CreateRoleRequest;
 import com.kenzie.unit.two.iam.models.Role;
 import com.kenzie.unit.two.iam.storage.Storage;
@@ -16,7 +17,7 @@ public class RoleService {
 
     public Role createRole(CreateRoleRequest request) {
         if (storage.getRoleByRoleName(request.getRoleName()) != null) {
-            throw new IllegalArgumentException("Role already exists");
+            throw new UserOrRoleNotFoundException("Role already exists");
         }
         Role role = new Role(UUID.randomUUID(), request.getRoleName());
         storage.storeRole(role);

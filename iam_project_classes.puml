@@ -1,0 +1,71 @@
+@startuml
+
+class DepartmentService {
+    +addStorage(storage: Storage): void
+}
+
+class RoleService {
+    +addStorage(storage: Storage): void
+}
+
+class UserService {
+    +addStorage(storage: Storage): void
+}
+
+class UserRoleService {
+    +addStorage(storage: Storage): void
+}
+
+class User {
+    -id: int
+    -userName: String
+    -department: Department
+
+    +getId(): int
+    +getUserName(): String
+    +getDepartment(): Department
+    +setId(id: int): void
+    +setUserName(userName: String): void
+    +setDepartment(department: Department): void
+}
+class UserRoles{
+}
+class EmployeeServices{
+}
+class WareHouseService{
+}
+
+class Employee {
+    -id: int
+    -userName: String
+    -payCheck: double
+    -department: Department
+
+    +getId(): int
+    +getUserName(): String
+    +getPayCheck(): double
+    +getDepartment(): Department
+    +setId(id: int): void
+    +setUserName(userName: String): void
+    +setPayCheck(payCheck: double): void
+    +setDepartment(department: Department): void
+}
+
+class Storage {
+}
+enum Roles{
+}
+enum Departments{
+}
+
+class Department {
+}
+
+DepartmentService  *-- Storage
+RoleService *-- Storage
+UserService *-- Storage
+UserRoleService  *-- Storage
+User *--  Department
+Employee *-- Department
+
+@enduml

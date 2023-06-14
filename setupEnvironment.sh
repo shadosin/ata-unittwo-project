@@ -13,13 +13,13 @@
 #If the casing is different you will have issues.
 
 #export UNIT_TWO_REPO_NAME=ata-unit-two-project-student-name
-export UNIT_TWO_REPO_NAME=ata-unit-two-project-YourActualGithubUsername
+export UNIT_TWO_REPO_NAME=ata-unit-two-project-michaelcookie
 
 #Replace yourusernameinlowercase with your github username all lowercase
 #This MUST be ALL lowercase or you will have problems
 #for example if your username was student-name this would read:
 #export GITHUB_USERNAME=student-name
-export GITHUB_USERNAME=yourusernameinlowercase
+export GITHUB_USERNAME=michaelcookie
 
 
 # Do not modify the rest of these unless you have been instructed to do so.

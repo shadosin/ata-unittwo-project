@@ -19,12 +19,14 @@ public class CanUserPackItem implements RequestHandler<CanUserPackItemRequest, B
     @Override
     public Boolean handleRequest(CanUserPackItemRequest event, Context context) {
         LambdaLogger logger = context.getLogger();
+        logger.log("DEBUG!!");
         logger.log("CONTEXT: " + gson.toJson(context));
         // process event
         logger.log("ENVIRONMENT VARIABLES: " + gson.toJson(System.getenv()));
         logger.log("EVENT: " + gson.toJson(event));
 
         Boolean doesUserHaveRole = App.warehouseService().canWarehouseUserPackItem(event);
+        logger.log("RESULT!:" + doesUserHaveRole);
         return doesUserHaveRole;
     }
 }

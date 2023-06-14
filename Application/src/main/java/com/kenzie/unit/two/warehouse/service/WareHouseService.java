@@ -11,6 +11,8 @@ import com.kenzie.unit.two.warehouse.lambda.models.CanInvoiceClientRequest;
 import com.kenzie.unit.two.warehouse.lambda.models.CanUserPackItemRequest;
 
 import com.kenzie.ata.ExcludeFromJacocoGeneratedReport;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +34,9 @@ public class WareHouseService {
     }
 
     public boolean canWarehouseUserPackItem(CanUserPackItemRequest request) {
-        Role packItem = roleService.getRoleByRoleName(Roles.PACK_ITEMS.toString());
+        Logger logger = LogManager.getLogger();
+        logger.info("Role by name:" + Roles.PACK_ITEMS.toString());
+        Role packItem = roleService.getRoleByRoleName(Roles.PACK_ITEMS.getRoleName());
 
         User user = userService.getUserByUserName(request.getUserName());
 
@@ -48,18 +52,6 @@ public class WareHouseService {
 
         List<Role> roles = userRoleService.getUserRoles(user.getUserName()).getRoles();
 
-        boolean matchCreateInvoiceRole = false;
-        boolean matchViewClientRole = false;
-        if (roles != null) {
-            for (Role role : roles) {
-                if (role.getRoleName().equalsIgnoreCase(Roles.CREATE_INVOICE.getRoleName())) {
-                    matchCreateInvoiceRole = true;
-                }
-                if (role.getRoleName().equalsIgnoreCase(Roles.VIEW_CLIENT.getRoleName())) {
-                    matchViewClientRole = true;
-                }
-            }
-        }
-        return matchCreateInvoiceRole && matchViewClientRole;
+        return invoicingClientRole.matches(roles);
     }
 }

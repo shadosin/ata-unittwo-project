@@ -18,7 +18,18 @@ public class FunctionalRole {
 
     // Compare incoming list to the ones required for this class.
     public Boolean matches(List<Role> roleList) {
-        // TODO Task 5 - Write your code here ...
-        return null;
+        for (Roles requiredRole : roles) {
+            boolean roleFound = false;
+            for (Role userRole : roleList) {
+                if (requiredRole.getRoleName().equalsIgnoreCase(userRole.getRoleName())) {
+                    roleFound = true;
+                    break;
+                }
+            }
+            if (!roleFound) {
+                return false;
+            }
+        }
+        return true;
     }
 }

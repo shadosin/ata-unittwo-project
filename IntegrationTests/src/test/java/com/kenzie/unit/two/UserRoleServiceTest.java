@@ -13,6 +13,7 @@ import com.kenzie.unit.two.iam.service.DepartmentService;
 import com.kenzie.unit.two.iam.service.RoleService;
 import com.kenzie.unit.two.iam.service.UserRoleService;
 import com.kenzie.unit.two.iam.service.UserService;
+import com.kenzie.unit.two.iam.storage.Storage;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +27,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class UserRoleServiceTest {
 
@@ -177,6 +180,8 @@ class UserRoleServiceTest {
         assertTrue(filesWithNameInDirectory, CLASS_FILE + " not found in expected location.");
         assertTrue(contents.contains("contains"),"doesUserHaveRole method does not call contains method");
     }
+
+
 
     //HELPER METHODS USED TO INSPECT FILES
     private static String getFileContentFromResources(String filename) {

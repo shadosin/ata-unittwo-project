@@ -3,6 +3,7 @@ package com.kenzie.unit.two.employee.service;
 import com.kenzie.unit.two.employee.lambda.models.ViewEmployeePayCheckRequest;
 import com.kenzie.unit.two.employee.service.models.Employee;
 import com.kenzie.unit.two.iam.entities.Roles;
+import com.kenzie.unit.two.iam.models.Department;
 import com.kenzie.unit.two.iam.models.Role;
 import com.kenzie.unit.two.iam.models.User;
 import com.kenzie.unit.two.iam.service.RoleService;
@@ -14,6 +15,7 @@ import com.opencsv.exceptions.CsvValidationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.management.relation.RoleNotFoundException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -24,6 +26,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import java.util.Map;
+import java.util.UUID;
 
 
 public class EmployeeService {
@@ -47,22 +50,14 @@ public class EmployeeService {
         Role viewPayCheck = roleService.getRoleByRoleName(Roles.VIEW_PAYCHECK.getRoleName());
         User user = userService.getUserByUserName(request.getRequesterUserName());
 
+
         if (!userRoleService.doesUserHaveRole(user, viewPayCheck)) {
-            throw new UnauthorizedException("Employee does not have the required role");
+            throw new UserOrRoleNotFoundException("User or role not found");
         } else {
             try {
-
                 String employeeData = null;
-
                 try {
-                    //getPath() call has issues loading the file resource from jar file. downloadEmployeeData is preferred
-                    //employeeData = loader.getResource("employee.csv").getPath();
-
-                    if (employeeData == null || employeeData.equals("")) {
-                        employeeData = downloadEmployeeData(
-                                new URL(employeeCSVUrl),
-                                "employee.csv");
-                    }
+                    employeeData = downloadEmployeeData(new URL(employeeCSVUrl), "employee.csv");
                 } catch (Exception ex) {
                     throw new RuntimeException("Please message your instructor for additional help on populating the correct Employee Data if you hit this Exception.");
                 }
@@ -71,16 +66,17 @@ public class EmployeeService {
                 CSVReaderHeaderAware reader = new CSVReaderHeaderAware(new FileReader(file));
                 Map<String, String> values;
                 while (((values = reader.readMap())) != null) {
-                    String id = values.get("Id");
+                    UUID id = UUID.fromString(values.get("Id"));
                     String userName = values.get("Username");
                     String department = values.get("Department");
                     String payCheck = values.get("Paycheck");
 
                     if (theCorrectUser(request.getEmployeeUserName(), userName)) {
                         if (inTheSameDepartment(user.getDepartment().getName(), department)) {
-                            employee = new Employee(id, userName, department, payCheck);
+                            employee = new Employee(id, userName, user.getDepartment(), payCheck);
+                            log.info("Audit: User .* viewed employee .* paycheck information");
                         } else {
-                            throw new UnauthorizedException("User does not belong to employee's department");
+                            throw new UnauthorizedException("User does not belong to the employee's department");
                         }
                     }
                 }

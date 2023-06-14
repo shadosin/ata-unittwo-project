@@ -1,5 +1,6 @@
 package com.kenzie.unit.two.iam.service;
 
+import com.kenzie.unit.two.employee.service.UserOrRoleNotFoundException;
 import com.kenzie.unit.two.iam.lambda.models.CreateUserRequest;
 import com.kenzie.unit.two.iam.models.Department;
 import com.kenzie.unit.two.iam.models.User;
@@ -22,10 +23,10 @@ public class UserService {
         Department department = storage.getDepartmentByName(request.getDepartmentName());
 
         if (department == null) {
-            throw new IllegalArgumentException("Department does not exist");
+            throw new UserOrRoleNotFoundException("Department does not exist");
         }
         if (storage.getUserByUsername(request.getUserName()) != null) {
-            throw new IllegalArgumentException("User already exists");
+            throw new UserOrRoleNotFoundException("User already exists");
         }
         User user = new User(UUID.randomUUID(), request.getUserName(), department);
         storage.storeUser(user);
